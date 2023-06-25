@@ -1,0 +1,512 @@
+            (check whether target is exits or not return index)
+
+int search(vector<int>& nums, int target) {
+    
+    int n = nums.size();
+
+    int low = 0, high = n - 1;
+
+    while(low <= high){
+
+        int mid = (low + high) >> 1;
+
+        if(nums[mid] == target){
+            return mid;
+        }
+        else if(target > nums[mid]){
+
+            low = mid + 1;
+        }
+        else{
+            high = mid - 1;
+        }
+    }
+
+    return -1;
+
+}
+
+-------------
+
+int bs(int low, int high, vector<int> &nums, int target){
+
+    if(low > high){
+        return -1;
+    }
+
+    int mid = (low + high) >> 1;
+
+    if(nums[mid] == target){
+        return mid;
+    }
+    else if(target > nums[mid]){
+        return bs(mid + 1, high, nums, target);
+    }
+    else{
+        return bs(low, mid - 1, nums, target);
+    }
+}
+
+int search(vector<int>& nums, int target) {
+    
+    return bs(0, nums.size() - 1, nums, target);
+
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+        (implement a lowbound)
+
+return smallest indexx which is follow the given condtion : arr[i] >= x;
+
+if no ans is possible then the last index is always possible
+
+#include<bits/stdc++.h>
+
+
+int lowerBound(vector<int> arr, int n, int x) {
+	
+	int low = 0, high = n - 1;
+
+	int ans = n;
+
+	while(low <= high){
+
+		int mid = (low + high) >> 1;
+
+		if(arr[mid] >= x){
+
+			ans = mid;
+
+			high = mid - 1;
+		}
+		else{
+
+			low = mid + 1;
+		}
+	}
+
+	return ans;
+
+}
+
+--------------------------------
+
+int lowerBound(vector<int> arr, int n, int x) {
+	
+	auto index = lower_bound(arr.begin(), arr.end(), x) - arr.begin();
+
+	return index; 
+
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+    (implement upperbound)
+
+return smallest indexx which is follow the given condtion : arr[i] > x;
+
+if no ans is possible then the last index is always possible
+
+int upperBound(vector<int> &arr, int x, int n){
+	
+	int low = 0, high = n - 1;
+
+	int ans = n;
+
+	while(low <= high){
+
+		int mid = (low + high) >> 1;
+
+		if(arr[mid] > x){
+			ans = mid;
+			high = mid - 1;
+		}else{
+			low = mid + 1;
+		}
+	}
+
+	return ans;
+}
+
+---------------------------------------------------------------------------------------------------------------------
+
+    (search and insert)
+
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        
+        int low = 0, high = nums.size() - 1;
+
+        int ans = nums.size();
+
+        while(low <= high){
+            
+            int mid = (low + high) >> 1;
+
+            if(nums[mid] >= target){
+                ans = mid;
+                high = mid - 1;
+            }else{
+                low = mid + 1;
+            }
+        }
+
+        return ans;
+
+    }
+};
+
+or either use of lower_bound
+
+--------------------------------------------------------------------------------------------------------------------
+
+              (floor and ceil)
+
+floor is that is largest element <= target;
+
+ceil is that is smallest element >= target;
+
+pair<int, int> getFloorAndCeil(int arr[], int n, int x) {
+
+	sort(arr, arr + n);
+
+	int ans1 = -1;
+
+	int low = 0, high = n - 1;
+
+	while(low <= high){
+
+		int mid = (low + high) >> 1;
+
+		if(arr[mid] <= x){
+			ans1 = mid;
+			low = mid + 1;
+		}else{
+			high = mid - 1;
+		}
+	}
+
+	low = 0, high = n - 1;
+
+	int ans2 = -1;
+
+	while(low <= high){
+
+		int mid = (low + high) >> 1;
+
+		if(arr[mid] >= x){
+			ans2 = mid;
+			high = mid - 1;
+		}else{
+			low = mid + 1;
+		}
+	}
+
+	if(ans1 != -1){
+		ans1 = arr[ans1];
+	}
+	if(ans2 != -1){
+		ans2 = arr[ans2];
+	}
+
+	return {ans1, ans2};
+
+}
+
+-----------------
+
+pair<int, int> getFloorAndCeil(int arr[], int n, int x) {
+
+	sort(arr, arr + n);
+
+	int ans1 = upper_bound(arr, arr + n, x) - arr;
+	ans1--;
+
+	int ans2 = lower_bound(arr, arr + n, x) - arr;
+
+	if(ans2 == n){
+		ans2 = -1;
+	}
+
+	if(ans1 != -1){
+		ans1 = arr[ans1];
+	}
+	if(ans2 != -1){
+		ans2 = arr[ans2];
+	}
+
+	return {ans1, ans2};
+
+----------------------------------------------------------------------------------------------------
+
+          (finding first and last occ)
+
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+
+        int n = nums.size();
+        
+        int low = 0, high = n - 1;
+
+        int ans = -1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(nums[mid] == target){
+                ans = mid;
+                break;
+            }
+            else if(target > nums[mid]){
+                low = mid + 1;
+            }else{
+                high = mid - 1;
+            }
+        }
+
+        if(ans == -1){
+            return {-1, -1};
+        }
+
+        low = lower_bound(nums.begin(), nums.end(), target) - nums.begin();
+
+        high = upper_bound(nums.begin(), nums.end(), target) - nums.begin();
+        high--;
+
+        return {low, high};
+
+    }
+};
+
+------------------------
+
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+
+        int n = nums.size();
+
+        int low = lower_bound(nums.begin(), nums.end(), target) - nums.begin();
+
+        if(low == n || nums[low] != target){
+            return {-1, -1};
+        }
+
+        int high = upper_bound(nums.begin(), nums.end(), target) - nums.begin();
+        high--;
+
+        return {low, high};
+
+    }
+};
+
+--------------------
+
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& arr, int target) {
+
+        int n = arr.size();
+
+        int first = -1, last = -1;
+
+        int low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] == target){
+                first = mid;
+                high = mid - 1;
+            }
+            else if(arr[mid] < target){
+                low = mid + 1;
+            }
+            else{
+                high = mid - 1;
+            }
+        }
+
+        if(first == -1){
+            return {-1, -1};
+        }
+
+        low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] == target){
+                last = mid;
+                low = mid + 1;
+            }
+            else if(arr[mid] < target){
+                low = mid + 1;
+            }
+            else{
+                high = mid - 1;
+            }
+        }
+
+        return {first, last};
+
+    }
+};
+
+-----------------------------------------------------------------------------------------------------
+
+      (same number of occurcex) - return how many
+
+class Solution{
+public:	
+
+	int count(int arr[], int n, int target) {
+
+        int first = -1, last = -1;
+
+        int low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] == target){
+                first = mid;
+                high = mid - 1;
+            }
+            else if(arr[mid] < target){
+                low = mid + 1;
+            }
+            else{
+                high = mid - 1;
+            }
+        }
+
+        if(first == -1){
+            return 0;
+        }
+
+        low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] == target){
+                last = mid;
+                low = mid + 1;
+            }
+            else if(arr[mid] < target){
+                low = mid + 1;
+            }
+            else{
+                high = mid - 1;
+            }
+        }
+
+        return last - first + 1;    
+	}
+};
+
+-------------------------------------------------------------------------------------------------------------
+
+    (search in rotated array) - unique element
+
+
+class Solution {
+public:
+    int search(vector<int>& arr, int target) {
+        
+        int n = arr.size();
+
+        int low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] == target){
+                return mid;
+            }
+            
+            if(arr[low] <= arr[mid]){
+                if(arr[low] <= target && target <= arr[mid]){
+                    high = mid - 1;
+                }else{
+                    low = mid + 1;
+                }
+            }
+            else{
+                if(arr[mid] <= target && target <= arr[high]){
+                    low = mid + 1;
+                }else{
+                    high = mid - 1;
+                }
+            }
+        }
+
+        return -1;
+
+    }
+};
+
+if(arr[low] < arr[mid] || low == mid){ --> this condition we can also use 
+
+-----------------------------------------------------------------------------------------------------------
+
+        (search in rootated arry duplicate element)
+
+class Solution {
+public:
+
+    bool search(vector<int>& arr, int target) {
+        
+        int n = arr.size();
+
+        int low = 0, high = n - 1;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            if(arr[mid] == target){
+                return true;
+            }
+
+            if(arr[low] == arr[mid] && arr[mid] == arr[high]){
+                low++; high--;
+                continue;
+            }
+            
+            if(arr[low] <= arr[mid]){
+                if(arr[low] <= target && target <= arr[mid]){
+                    high = mid - 1;
+                }else{
+                    low = mid + 1;
+                }
+            }
+            else{
+                if(arr[mid] <= target && target <= arr[high]){
+                    low = mid + 1;
+                }else{
+                    high = mid - 1;
+                }
+            }
+        }
+
+        return false;
+
+    }
+};
+
+it's near about o(N / 2) and basically O(Log(N))
+
+----------------------------------------------------------------------------------------------------
+
+
