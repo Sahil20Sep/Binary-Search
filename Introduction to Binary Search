@@ -828,3 +828,256 @@ class Solution{
 	}  
 };
 
+----------------------------------------------------------------------------------------------------
+
+			(koko banana)
+
+class Solution {
+public:
+    int minEatingSpeed(vector<int>& arr, int h) {
+
+        long long n = arr.size();
+        
+        long long low = 1, high = *max_element(arr.begin(), arr.end());
+
+        long long ans = 0;
+
+        while(low <= high){
+
+            long long mid = (low + high) >> 1;
+
+            long long curr = 0;
+
+            for(long long i = 0; i < n; i++){
+
+                if(arr[i] % mid == 0){
+
+                    curr += (arr[i] / mid);
+
+                }else{
+
+                    curr += (arr[i] / mid) + 1;
+
+                }
+            }
+
+            curr <= h ? ans = mid, high = mid - 1 : low = mid + 1;
+        }
+
+        return ans;
+
+    }
+};
+
+else you can also return low.
+
+time complexity is O(n) * o(log(max_elemtn))
+
+-----
+
+class Solution {
+public:
+    int minEatingSpeed(vector<int>& arr, int h) {
+
+        long long n = arr.size();
+        
+        long long low = 1, high = *max_element(arr.begin(), arr.end());
+
+        while(low <= high){
+
+            long long mid = (low + high) >> 1;
+
+            long long curr = 0;
+
+            for(long long i = 0; i < n; i++){
+
+                curr += ceil((double)arr[i] / (double)mid);
+
+            }
+
+            curr <= h ? high = mid - 1 : low = mid + 1;
+        }
+
+        return low;
+
+    }
+};
+
+------------------------------------------------------------------------------------------------------------
+
+			(rose garden)
+
+class Solution {
+public:
+    int minDays(vector<int>& arr, int m, int k) {
+        
+        long long n = arr.size();
+
+        if(m > n || k > n || m * k > n){
+            return -1;
+        }
+
+        long long low = *min_element(arr.begin(), arr.end()), high = *max_element(arr.begin(), arr.end());
+
+        while(low <= high){
+
+            long long mid = (low + high) >> 1;
+
+            long long cnt = 0, store = 0;
+
+            for(long long i = 0; i < n; i++){
+
+                if(mid >= arr[i]){
+                    cnt++;
+                }else{
+                    if(cnt >= k){
+                        store += (cnt / k);
+                    }
+                    cnt = 0;
+                }
+
+                if(i == n - 1){
+                    if(cnt >= k){
+                        store += (cnt / k);
+                    }
+                }
+
+            }
+
+            store >= m ? high = mid - 1 : low = mid + 1; 
+
+        }
+
+        return low;
+
+    }
+};
+
+--------------------------------------------------------------------------------------
+
+			(find the smallest divisor)
+
+class Solution {
+public:
+    int smallestDivisor(vector<int>& arr, int t) {
+
+        int n = arr.size();
+        
+        int low = 1, high = *max_element(arr.begin(), arr.end());
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            int sum = 0;
+
+            for(int i = 0; i < n; i++){
+
+                sum += ceil((double)arr[i] / (double)mid);
+
+            }
+
+            sum <= t ? high = mid - 1 : low = mid + 1;
+        }
+
+        return low;
+
+    }
+};
+
+------------------------------------------------------------------------------------------------------------
+
+		(ship load question)
+
+class Solution {
+public:
+    int shipWithinDays(vector<int>& arr, int days) {
+
+        int sum = 0, n = arr.size(), mn = INT_MIN;
+
+        for(int i = 0; i < n; i++){
+            sum += arr[i];
+            if(arr[i] > mn){
+                mn = arr[i];
+            }
+        }
+        
+        int low = mn, high = sum;
+
+        while(low <= high){
+
+            int mid = (low + high) >> 1;
+
+            int rem = mid, cnt = 1;
+
+            for(int i = 0; i < n; i++){
+
+                if(rem - arr[i] >= 0){
+
+                    rem -= arr[i];
+
+                }else{
+
+                    cnt++;
+                    rem = mid;
+                    rem -= arr[i];
+
+                }
+
+            }
+
+            cnt <= days ? high = mid - 1 : low = mid + 1;
+
+        }
+
+        return low;
+
+    }
+};
+
+------
+
+	int load = 0, req_days = 1;
+
+	for(int i = 0; i < n; i++){
+	
+	if(load + arr[i] <= mid){
+	    load += arr[i];
+	}else{
+	    req_days++;
+	    load = arr[i];
+	}
+	
+	}
+
+---------------------------------------------------------------------------------------------------------------
+
+ 				(find kth missing element)
+
+class Solution {
+public:
+    int findKthPositive(vector<int>& arr, int k) {
+
+        int n = arr.size();
+
+        int missing = k;
+
+        for(int i = 0; i < n; i++){
+
+            if(arr[i] <= missing){
+                missing++;
+            }else{
+                return missing;
+            }
+
+        }
+
+        return missing;
+
+    }
+};
+
+-------------
+
+
+
