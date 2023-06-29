@@ -1144,5 +1144,66 @@ public:
     }
 };
 
+---------------------------------------------------------------------------------------
+
+			bool allocation --> min of max
+
+class Solution 
+{
+    public:
+    
+    int findPages(int arr[], int n, int m) 
+    {
+        
+        if(m > n){
+            return -1;
+        }
+        
+        int sum = 0, mx = INT_MIN;
+        
+        for(int i = 0; i < n; i++){
+            
+            sum += arr[i];
+            
+            if(arr[i] > mx){
+                
+                mx = arr[i];
+                
+            }
+        }
+        
+        int low = mx, high = sum;
+        
+        while(low <= high){
+            
+            int mid = (low + high) >> 1;
+            
+            int student = 1, page = 0;
+            
+            for(int i = 0; i < n; i++){
+                
+                if(page + arr[i] <= mid){
+                    
+                    page += arr[i];
+                    
+                }else{
+                    
+                    student++;
+                    
+                    page = arr[i];
+                }
+            }
+            
+            student <= m ? high = mid - 1 : low = mid + 1;
+            
+        }
+        
+        // cout << low << " " << high << endl;
+        
+        return low;
+        
+    }
+};
+
 
 
